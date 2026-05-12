@@ -324,25 +324,99 @@ let results = [];
 let startTime = 0;
 let participant = {};
 let answered = false;
+let filteredQuestions = [];
+
+/* =========================
+   LANGUAGE DROPDOWN LOGIC
+========================= */
+
+const languageOrder = ["English", "Bengali", "Hindi"];
+
+const l1Select = document.getElementById('l1');
+const l2Select = document.getElementById('l2');
+const l3Select = document.getElementById('l3');
+
+function populateDropdown(selectElement, options, placeholder) {
+  selectElement.innerHTML = `<option value="">${placeholder}</option>`;
+
+  options.forEach(lang => {
+    const option = document.createElement('option');
+    option.value = lang;
+    option.textContent = lang;
+    selectElement.appendChild(option);
+  });
+}
+
+populateDropdown(l1Select, languageOrder, '-- Select --');
+populateDropdown(l2Select, [], '-- Select --');
+populateDropdown(l3Select, [], '-- None --');
+
+l1Select.addEventListener('change', () => {
+  const l1 = l1Select.value;
+
+  l2Select.value = '';
+  l3Select.value = '';
+
+  const l2Options = languageOrder.filter(lang => lang !== l1);
+
+  populateDropdown(l2Select, l2Options, '-- Select --');
+  populateDropdown(l3Select, [], '-- None --');
+});
+
+l2Select.addEventListener('change', () => {
+  const l1 = l1Select.value;
+  const l2 = l2Select.value;
+
+  l3Select.value = '';
+
+  const l3Options = languageOrder.filter(
+    lang => lang !== l1 && lang !== l2
+  );
+
+  populateDropdown(l3Select, l3Options, '-- None --');
+});
+
+/* =========================
+   SCREEN FLOW
+========================= */
 
 function goToInstructions() {
   const pid = document.getElementById('pid').value.trim();
   const age = document.getElementById('age').value.trim();
   const gender = document.getElementById('gender').value;
   const occupation = document.getElementById('occupation').value.trim();
-  const l1 = document.getElementById('l1').value;
 
-  const l2 = document.getElementById('l2').value;
+  const l1 = l1Select.value;
+  const l2 = l2Select.value;
+  const l3 = l3Select.value;
+
   if (!pid || !age || !gender || !occupation || !l1 || !l2) {
-    alert('Please fill in all required fields (Name, Age, Gender, Occupation, L1, L2) before continuing.');
+    alert('Please fill in all required fields.');
     return;
   }
 
   participant = {
-    id: pid, age, gender, occupation,
-    l1, l2,
-    l3: document.getElementById('l3').value || 'None'
+    id: pid,
+    age,
+    gender,
+    occupation,
+    l1,
+    l2,
+    l3: l3 || 'None'
   };
+
+  const selectedLanguages = [l1, l2];
+
+  if (l3) {
+    selectedLanguages.push(l3);
+  }
+
+  filteredQuestions = [];
+
+  selectedLanguages.forEach(lang => {
+    const langQuestions = questions.filter(q => q.language === lang);
+    filteredQuestions.push(...langQuestions);
+  });
 
   showScreen('instructionScreen');
 }
@@ -352,69 +426,119 @@ function startExperiment() {
   showQuestion(0);
 }
 
+/* =========================
+   SHOW QUESTIONS
+========================= */
+
 function showQuestion(index) {
   answered = false;
-  const q = questions[index];
+
+  const q = filteredQuestions[index];
+
   currentIndex = index;
 
-  document.getElementById('counter').textContent = `Question ${index + 1} of ${questions.length}`;
-  document.getElementById('progressFill').style.width = `${(index / questions.length) * 100}%`;
+  document.getElementById('counter').textContent =
+    `Question ${index + 1} of ${filteredQuestions.length}`;
+
+  document.getElementById('progressFill').style.width =
+    `${(index / filteredQuestions.length) * 100}%`;
 
   const badge = document.getElementById('langBadge');
+
   badge.textContent = q.language;
   badge.className = 'lang-badge';
-  if (q.language === 'Hindi') badge.classList.add('hindi');
-  if (q.language === 'Bengali') badge.classList.add('bengali');
+
+  if (q.language === 'Hindi') {
+    badge.classList.add('hindi');
+  }
+
+  if (q.language === 'Bengali') {
+    badge.classList.add('bengali');
+  }
 
   document.getElementById('questionText').textContent = q.question;
 
   const container = document.getElementById('optionsContainer');
+
   container.innerHTML = '';
-  ['a','b','c','d'].forEach(key => {
+
+  ['a', 'b', 'c', 'd'].forEach(key => {
     const btn = document.createElement('button');
+
     btn.className = 'option-btn';
     btn.id = `opt-${key}`;
-    btn.innerHTML = `<span class="option-label">${key.toUpperCase()}</span> ${q[key]}`;
+
+    btn.innerHTML =
+      `<span class="option-label">${key.toUpperCase()}</span> ${q[key]}`;
+
     btn.onclick = () => recordAnswer(key.toUpperCase(), q);
+
     container.appendChild(btn);
   });
 
   document.getElementById('feedbackBox').style.display = 'none';
   document.getElementById('feedbackBox').className = 'feedback-box';
+
   document.getElementById('nextBtn').style.display = 'none';
 
-  // Start timer after question is displayed
   startTime = performance.now();
 }
 
+/* =========================
+   RECORD ANSWERS
+========================= */
+
 function recordAnswer(chosen, q) {
   if (answered) return;
+
   answered = true;
 
   const rt = ((performance.now() - startTime) / 1000).toFixed(4);
+
   const isCorrect = chosen === q.correct;
 
-  // Highlight buttons
   ['a','b','c','d'].forEach(key => {
     const btn = document.getElementById(`opt-${key}`);
+
     if (key.toUpperCase() === q.correct) {
       btn.classList.add('correct');
-    } else if (key.toUpperCase() === chosen && !isCorrect) {
+
+    } else if (
+      key.toUpperCase() === chosen &&
+      !isCorrect
+    ) {
       btn.classList.add('wrong');
+
     } else {
       btn.classList.add('disabled');
     }
   });
 
-  // Show feedback
   const fb = document.getElementById('feedbackBox');
+
   fb.style.display = 'block';
+
   if (isCorrect) {
     fb.className = 'feedback-box correct';
-    fb.innerHTML = `✅ Correct! <div class="rt-display">Response time: ${rt}s</div>`;
+
+    fb.innerHTML =
+      `✅ Correct!
+      <div class="rt-display">
+      Response time: ${rt}s
+      </div>`;
+
   } else {
+
     fb.className = 'feedback-box wrong';
-    fb.innerHTML = `❌ Incorrect. The correct answer was: <strong>${q.correct} — ${q[q.correct.toLowerCase()]}</strong><div class="rt-display">Response time: ${rt}s</div>`;
+
+    fb.innerHTML =
+      `❌ Incorrect.
+      The correct answer was:
+      <strong>${q.correct} — ${q[q.correct.toLowerCase()]}</strong>
+
+      <div class="rt-display">
+      Response time: ${rt}s
+      </div>`;
   }
 
   document.getElementById('nextBtn').style.display = 'block';
@@ -437,55 +561,147 @@ function recordAnswer(chosen, q) {
   });
 }
 
+/* =========================
+   NEXT QUESTION
+========================= */
+
 function nextQuestion() {
-  if (currentIndex + 1 < questions.length) {
+
+  if (currentIndex + 1 < filteredQuestions.length) {
+
     showQuestion(currentIndex + 1);
+
   } else {
+
     showSummary();
   }
 }
 
+/* =========================
+   SUMMARY
+========================= */
+
 function showSummary() {
+
   showScreen('summaryScreen');
-  document.getElementById('progressFill').style.width = '100%';
 
   const total = results.length;
-  const correct = results.filter(r => r.is_correct).length;
-  const rts = results.map(r => parseFloat(r.response_time_s));
-  const avgRT = (rts.reduce((a,b) => a+b, 0) / rts.length).toFixed(2);
-  const fastest = Math.min(...rts).toFixed(2);
 
-  document.getElementById('sumAccuracy').textContent = Math.round((correct/total)*100) + '%';
-  document.getElementById('sumCorrect').textContent = `${correct}/30`;
-  document.getElementById('sumAvgRT').textContent = avgRT + 's';
-  document.getElementById('sumFastest').textContent = fastest + 's';
+  const correct =
+    results.filter(r => r.is_correct).length;
 
-  ['English','Hindi','Bengali'].forEach(lang => {
-    const lr = results.filter(r => r.question_language === lang);
-    const lc = lr.filter(r => r.is_correct).length;
-    const la = (lr.map(r => parseFloat(r.response_time_s)).reduce((a,b)=>a+b,0)/lr.length).toFixed(2);
-    const id = lang === 'English' ? 'engStat' : lang === 'Hindi' ? 'hinStat' : 'benStat';
-    document.getElementById(id).textContent = `${lc}/10 correct · ${la}s avg`;
+  const rts =
+    results.map(r => parseFloat(r.response_time_s));
+
+  const avgRT =
+    (rts.reduce((a,b) => a+b, 0) / rts.length).toFixed(2);
+
+  const fastest =
+    Math.min(...rts).toFixed(2);
+
+  document.getElementById('sumAccuracy').textContent =
+    Math.round((correct/total)*100) + '%';
+
+  document.getElementById('sumCorrect').textContent =
+    `${correct}/${total}`;
+
+  document.getElementById('sumAvgRT').textContent =
+    avgRT + 's';
+
+  document.getElementById('sumFastest').textContent =
+    fastest + 's';
+
+  ['English','Bengali','Hindi'].forEach(lang => {
+
+    const lr =
+      results.filter(r => r.question_language === lang);
+
+    if (lr.length === 0) return;
+
+    const lc =
+      lr.filter(r => r.is_correct).length;
+
+    const la =
+      (
+        lr.map(r => parseFloat(r.response_time_s))
+        .reduce((a,b)=>a+b,0) / lr.length
+      ).toFixed(2);
+
+    const id =
+      lang === 'English'
+      ? 'engStat'
+      : lang === 'Hindi'
+      ? 'hinStat'
+      : 'benStat';
+
+    document.getElementById(id).textContent =
+      `${lc}/${lr.length} correct · ${la}s avg`;
   });
 }
 
+/* =========================
+   DOWNLOAD CSV
+========================= */
+
 function downloadCSV() {
-  const headers = ['participant_id','age','gender','occupation','l1','l2','l3',
-    'question_number','question_language','question','option_chosen',
-    'correct_answer','is_correct','response_time_s'];
-  const rows = results.map(r => headers.map(h => `"${r[h]}"`).join(','));
-  const csv = [headers.join(','), ...rows].join('\n');
-  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+
+  const headers = [
+    'participant_id',
+    'age',
+    'gender',
+    'occupation',
+    'l1',
+    'l2',
+    'l3',
+    'question_number',
+    'question_language',
+    'question',
+    'option_chosen',
+    'correct_answer',
+    'is_correct',
+    'response_time_s'
+  ];
+
+  const rows = results.map(r =>
+    headers.map(h => `"${r[h]}"`).join(',')
+  );
+
+  const csv =
+    [headers.join(','), ...rows].join('\n');
+
+  const blob =
+    new Blob(
+      ['\ufeff' + csv],
+      { type: 'text/csv;charset=utf-8;' }
+    );
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const a =
+    document.createElement('a');
+
   a.href = url;
-  a.download = `homonym_results_${participant.id}.csv`;
+
+  a.download =
+    `homonym_results_${participant.id}.csv`;
+
   a.click();
 }
 
+/* =========================
+   SCREEN SWITCH
+========================= */
+
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+
+  document
+    .querySelectorAll('.screen')
+    .forEach(s => s.classList.remove('active'));
+
+  document
+    .getElementById(id)
+    .classList.add('active');
 }
 </script>
 </body>
