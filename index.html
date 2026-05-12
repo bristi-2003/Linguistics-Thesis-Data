@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homonym Recognition Study</title>
+<script src="questions.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f4f8;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px 28px;
+    max-width: 620px;
+    width: 100%;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+  }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  h1 { font-size: 1.6rem; color: #1a202c; margin-bottom: 8px; }
+  h2 { font-size: 1.1rem; color: #4a5568; margin-bottom: 20px; font-weight: 400; }
+  p { color: #4a5568; line-height: 1.7; margin-bottom: 14px; }
+
+  label { display: block; font-size: 0.9rem; color: #4a5568; margin-bottom: 6px; font-weight: 600; margin-top: 14px; }
+  input, select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input:focus, select:focus { border-color: #4f46e5; }
+
+  .btn {
+    width: 100%;
+    padding: 14px;
+    background: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.2s;
+  }
+  .btn:hover { background: #4338ca; }
+  .btn.green { background: #059669; }
+  .btn.green:hover { background: #047857; }
+
+  /* Instructions */
+  .instruction-box {
+    background: #f8fafc;
+    border-left: 4px solid #4f46e5;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+  }
+  .instruction-box p { margin-bottom: 8px; }
+  .option-legend { margin: 16px 0; }
+  .legend-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .legend-badge {
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+  }
+  .legend-text { font-size: 0.9rem; color: #2d3748; line-height: 1.5; padding-top: 4px; }
+
+  /* Progress */
+  .progress-bar { height: 6px; background: #e2e8f0; border-radius: 99px; margin-bottom: 20px; }
+  .progress-fill { height: 100%; background: #4f46e5; border-radius: 99px; transition: width 0.3s ease; }
+  .counter { font-size: 0.85rem; color: #718096; margin-bottom: 8px; }
+  .lang-badge {
+    display: inline-block;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 99px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .lang-badge.hindi { background: #fff3e0; color: #e65100; }
+  .lang-badge.bengali { background: #e8f5e9; color: #2e7d32; }
+
+  .question-text {
+    font-size: 1.1rem;
+    color: #1a202c;
+    line-height: 1.8;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #f8fafc;
+    border-left: 4px solid #4f46e5;
+    border-radius: 8px;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.92rem;
+    color: #2d3748;
+    text-align: left;
+    transition: all 0.15s ease;
+    width: 100%;
+  }
+  .option-btn:hover { border-color: #4f46e5; background: #f5f3ff; }
+  .option-btn.correct { border-color: #059669; background: #ecfdf5; color: #065f46; pointer-events: none; }
+  .option-btn.wrong { border-color: #dc2626; background: #fef2f2; color: #991b1b; pointer-events: none; }
+  .option-btn.disabled { pointer-events: none; opacity: 0.5; }
+  .option-label {
+    min-width: 30px; height: 30px; border-radius: 50%;
+    background: #eef2ff; color: #4f46e5;
+    font-weight: 700; display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem;
+  }
+
+  /* Feedback */
+  .feedback-box {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: none;
+  }
+  .feedback-box.correct { background: #ecfdf5; color: #065f46; border: 1.5px solid #059669; }
+  .feedback-box.wrong { background: #fef2f2; color: #991b1b; border: 1.5px solid #dc2626; }
+  .rt-display { font-size: 0.82rem; font-weight: 400; margin-top: 4px; color: #6b7280; }
+
+  .next-btn {
+    width: 100%; padding: 13px;
+    background: #4f46e5; color: white;
+    border: none; border-radius: 12px;
+    font-size: 1rem; font-weight: 600;
+    cursor: pointer; margin-top: 14px;
+    display: none;
+    transition: background 0.2s;
+  }
+  .next-btn:hover { background: #4338ca; }
+
+  /* Summary */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .summary-card {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+  .summary-card .val { font-size: 1.8rem; font-weight: 700; color: #4f46e5; }
+  .summary-card .lbl { font-size: 0.78rem; color: #718096; margin-top: 4px; }
+  .lang-summary { margin-top: 16px; }
+  .lang-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid #f0f4f8;
+    font-size: 0.9rem; color: #2d3748;
+  }
+  .lang-row span { font-weight: 600; color: #4f46e5; }
+</style>
+</head>
+<body>
+
+<!-- SCREEN 1: PARTICIPANT INFO -->
+<div class="card screen active" id="infoScreen">
+  <h1>Homonym Recognition Study</h1>
+  <h2>Linguistics Research Experiment</h2>
+  <p>Please fill in your details before we begin. All information is confidential and used for research purposes only.</p>
+
+  <label>Full Name / Participant ID</label>
+  <input type="text" id="pid" placeholder="e.g. Priya Das">
+
+  <label>Age</label>
+  <input type="number" id="age" placeholder="e.g. 22" min="10" max="100">
+
+  <label>Gender</label>
+  <select id="gender">
+    <option value="">-- Select --</option>
+    <option>Male</option>
+    <option>Female</option>
+    <option>Other</option>
+    <option>Prefer not to say</option>
+  </select>
+
+  <label>Occupation</label>
+  <input type="text" id="occupation" placeholder="e.g. Student, Teacher, Engineer">
+
+  <label>Dominant Language — L1</label>
+  <select id="l1">
+    <option value="">-- Select --</option>
+    <option>English</option>
+    <option>Hindi</option>
+    <option>Bengali</option>
+    <option>Other</option>
+  </select>
+
+  <label>Second Language — L2 (optional)</label>
+  <select id="l2">
+    <option value="">-- None --</option>
+    <option>English</option>
+    <option>Hindi</option>
+    <option>Bengali</option>
+    <option>Other</option>
+  </select>
+
+  <label>Third Language — L3 (optional)</label>
+  <select id="l3">
+    <option value="">-- None --</option>
+    <option>English</option>
+    <option>Hindi</option>
+    <option>Bengali</option>
+    <option>Other</option>
+  </select>
+
+  <button class="btn" onclick="goToInstructions()">Next →</button>
+</div>
+
+<!-- SCREEN 2: INSTRUCTIONS -->
+<div class="card screen" id="instructionScreen">
+  <h1>📋 Instructions</h1>
+
+  <div class="instruction-box">
+    <p>You will be shown <strong>30 sentences</strong> — 10 in English, 10 in Hindi, and 10 in Bengali.</p>
+    <p>Each sentence uses a word that may or may not be used correctly. Your job is to classify each sentence using one of the four options below.</p>
+    <p><strong>Answer as quickly and accurately as you can.</strong> Your response time is recorded automatically.</p>
+  </div>
+
+  <p style="font-weight:600; color:#1a202c; margin-bottom:10px;">The four options mean:</p>
+  <div class="option-legend">
+    <div class="legend-item">
+      <div class="legend-badge">A/B/C/D</div>
+      <div class="legend-text"><strong>Correct & Clear</strong> — The sentence is grammatically correct and the word is used properly.</div>
+    </div>
+    <div class="legend-item">
+      <div class="legend-badge">A/B/C/D</div>
+      <div class="legend-text"><strong>Sounds Right, but Spelled Wrong</strong> — The sentence sounds okay when spoken, but a word is misspelled (homophone error).</div>
+    </div>
+    <div class="legend-item">
+      <div class="legend-badge">A/B/C/D</div>
+      <div class="legend-text"><strong>Spelled Right, but Meaning is Wrong</strong> — The words are spelled correctly but used in the wrong context (wrong meaning).</div>
+    </div>
+    <div class="legend-item">
+      <div class="legend-badge">A/B/C/D</div>
+      <div class="legend-text"><strong>Incorrect & Nonsense</strong> — The sentence makes no sense at all.</div>
+    </div>
+  </div>
+
+  <p style="font-size:0.88rem; color:#718096;">Note: The position of each option (A/B/C/D) changes every question — read all options carefully before answering.</p>
+
+  <button class="btn" onclick="startExperiment()">I Understand — Start →</button>
+</div>
+
+<!-- SCREEN 3: QUESTION -->
+<div class="card screen" id="questionScreen">
+  <div class="counter" id="counter">Question 1 of 30</div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="lang-badge" id="langBadge">English</div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="feedback-box" id="feedbackBox"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
+</div>
+
+<!-- SCREEN 4: SUMMARY -->
+<div class="card screen" id="summaryScreen">
+  <h1>🎉 All Done!</h1>
+  <p>Thank you for completing the study. Here's how you did:</p>
+
+  <div class="summary-grid">
+    <div class="summary-card"><div class="val" id="sumAccuracy">-</div><div class="lbl">Overall Accuracy</div></div>
+    <div class="summary-card"><div class="val" id="sumCorrect">-</div><div class="lbl">Correct out of 30</div></div>
+    <div class="summary-card"><div class="val" id="sumAvgRT">-</div><div class="lbl">Avg Response Time</div></div>
+    <div class="summary-card"><div class="val" id="sumFastest">-</div><div class="lbl">Fastest Answer</div></div>
+  </div>
+
+  <div class="lang-summary">
+    <p style="font-weight:600; color:#1a202c; margin-bottom:4px;">By Language:</p>
+    <div class="lang-row">English <span id="engStat">-</span></div>
+    <div class="lang-row">Hindi <span id="hinStat">-</span></div>
+    <div class="lang-row">Bengali <span id="benStat">-</span></div>
+  </div>
+
+  <p style="margin-top:20px; font-size:0.88rem; color:#718096;">Please download your results and send the CSV file to the researcher via WhatsApp or email.</p>
+  <button class="btn green" onclick="downloadCSV()">⬇ Download My Results (CSV)</button>
+</div>
+
+<script>
+let currentIndex = 0;
+let results = [];
+let startTime = 0;
+let participant = {};
+let answered = false;
+
+function goToInstructions() {
+  const pid = document.getElementById('pid').value.trim();
+  const age = document.getElementById('age').value.trim();
+  const gender = document.getElementById('gender').value;
+  const occupation = document.getElementById('occupation').value.trim();
+  const l1 = document.getElementById('l1').value;
+
+  if (!pid || !age || !gender || !occupation || !l1) {
+    alert('Please fill in all required fields (Name, Age, Gender, Occupation, L1) before continuing.');
+    return;
+  }
+
+  participant = {
+    id: pid, age, gender, occupation,
+    l1, l2: document.getElementById('l2').value || 'None',
+    l3: document.getElementById('l3').value || 'None'
+  };
+
+  showScreen('instructionScreen');
+}
+
+function startExperiment() {
+  showScreen('questionScreen');
+  showQuestion(0);
+}
+
+function showQuestion(index) {
+  answered = false;
+  const q = questions[index];
+  currentIndex = index;
+
+  document.getElementById('counter').textContent = `Question ${index + 1} of ${questions.length}`;
+  document.getElementById('progressFill').style.width = `${(index / questions.length) * 100}%`;
+
+  const badge = document.getElementById('langBadge');
+  badge.textContent = q.language;
+  badge.className = 'lang-badge';
+  if (q.language === 'Hindi') badge.classList.add('hindi');
+  if (q.language === 'Bengali') badge.classList.add('bengali');
+
+  document.getElementById('questionText').textContent = q.question;
+
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  ['a','b','c','d'].forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.id = `opt-${key}`;
+    btn.innerHTML = `<span class="option-label">${key.toUpperCase()}</span> ${q[key]}`;
+    btn.onclick = () => recordAnswer(key.toUpperCase(), q);
+    container.appendChild(btn);
+  });
+
+  document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('feedbackBox').className = 'feedback-box';
+  document.getElementById('nextBtn').style.display = 'none';
+
+  // Start timer after question is displayed
+  startTime = performance.now();
+}
+
+function recordAnswer(chosen, q) {
+  if (answered) return;
+  answered = true;
+
+  const rt = ((performance.now() - startTime) / 1000).toFixed(4);
+  const isCorrect = chosen === q.correct;
+
+  // Highlight buttons
+  ['a','b','c','d'].forEach(key => {
+    const btn = document.getElementById(`opt-${key}`);
+    if (key.toUpperCase() === q.correct) {
+      btn.classList.add('correct');
+    } else if (key.toUpperCase() === chosen && !isCorrect) {
+      btn.classList.add('wrong');
+    } else {
+      btn.classList.add('disabled');
+    }
+  });
+
+  // Show feedback
+  const fb = document.getElementById('feedbackBox');
+  fb.style.display = 'block';
+  if (isCorrect) {
+    fb.className = 'feedback-box correct';
+    fb.innerHTML = `✅ Correct! <div class="rt-display">Response time: ${rt}s</div>`;
+  } else {
+    fb.className = 'feedback-box wrong';
+    fb.innerHTML = `❌ Incorrect. The correct answer was: <strong>${q.correct} — ${q[q.correct.toLowerCase()]}</strong><div class="rt-display">Response time: ${rt}s</div>`;
+  }
+
+  document.getElementById('nextBtn').style.display = 'block';
+
+  results.push({
+    participant_id: participant.id,
+    age: participant.age,
+    gender: participant.gender,
+    occupation: participant.occupation,
+    l1: participant.l1,
+    l2: participant.l2,
+    l3: participant.l3,
+    question_number: currentIndex + 1,
+    question_language: q.language,
+    question: q.question,
+    option_chosen: chosen,
+    correct_answer: q.correct,
+    is_correct: isCorrect,
+    response_time_s: rt
+  });
+}
+
+function nextQuestion() {
+  if (currentIndex + 1 < questions.length) {
+    showQuestion(currentIndex + 1);
+  } else {
+    showSummary();
+  }
+}
+
+function showSummary() {
+  showScreen('summaryScreen');
+  document.getElementById('progressFill').style.width = '100%';
+
+  const total = results.length;
+  const correct = results.filter(r => r.is_correct).length;
+  const rts = results.map(r => parseFloat(r.response_time_s));
+  const avgRT = (rts.reduce((a,b) => a+b, 0) / rts.length).toFixed(2);
+  const fastest = Math.min(...rts).toFixed(2);
+
+  document.getElementById('sumAccuracy').textContent = Math.round((correct/total)*100) + '%';
+  document.getElementById('sumCorrect').textContent = `${correct}/30`;
+  document.getElementById('sumAvgRT').textContent = avgRT + 's';
+  document.getElementById('sumFastest').textContent = fastest + 's';
+
+  ['English','Hindi','Bengali'].forEach(lang => {
+    const lr = results.filter(r => r.question_language === lang);
+    const lc = lr.filter(r => r.is_correct).length;
+    const la = (lr.map(r => parseFloat(r.response_time_s)).reduce((a,b)=>a+b,0)/lr.length).toFixed(2);
+    const id = lang === 'English' ? 'engStat' : lang === 'Hindi' ? 'hinStat' : 'benStat';
+    document.getElementById(id).textContent = `${lc}/10 correct · ${la}s avg`;
+  });
+}
+
+function downloadCSV() {
+  const headers = ['participant_id','age','gender','occupation','l1','l2','l3',
+    'question_number','question_language','question','option_chosen',
+    'correct_answer','is_correct','response_time_s'];
+  const rows = results.map(r => headers.map(h => `"${r[h]}"`).join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `homonym_results_${participant.id}.csv`;
+  a.click();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+</script>
+</body>
+</html>
