@@ -25,13 +25,13 @@ const questions = [
 
   // BENGALI
   { language: "Bengali", question: "কূল খেয়ে সে নদীর কুল এ বসে রইল।", a: "Sounds Right, but Spelled Wrong", b: "Spelled Right, but Meaning is Wrong", c: "Incorrect & Nonsense", d: "Correct & Clear", correct: "D" },
-  { language: "Bengali", question: "দেশকে ভালোবাসার কারণে সে নিজের দ্বেষকে ছাপিয়ে গেল।", a: "Correct & Clear", b: "Sounds Right, but Spelled Wrong", c: "Spelled Right, but Meaning is Wrong", d: "Incorrect & Nonsense", correct: "A" },
-  { language: "Bengali", question: "পরীক্ষায় ভালো ফল পাওয়ার পর সে একটা আপেল ফল খেল।", a: "Sounds Right, but Spelled Wrong", b: "Spelled Right, but Meaning is Wrong", c: "Correct & Clear", d: "Incorrect & Nonsense", correct: "C" },
-  { language: "Bengali", question: "পাখিরা নীড় পান করে তাদের নীরে উড়ে গেল।", a: "Correct & Clear", b: "Spelled Right, but Meaning is Wrong", c: "Sounds Right, but Spelled Wrong", d: "Incorrect & Nonsense", correct: "C" },
+  { language: "Bengali", question: "দেশকে  ভালোবাসার কারণে রাগ- দ্বেষও ভুলে থাকা যায়।", a: "Correct & Clear", b: "Sounds Right, but Spelled Wrong", c: "Spelled Right, but Meaning is Wrong", d: "Incorrect & Nonsense", correct: "A" },
+  { language: "Bengali", question: "পরীক্ষায় ভালো ফল হওয়ার কারণে সে একটা আপেল ফল উপহার পেল।", a: "Sounds Right, but Spelled Wrong", b: "Spelled Right, but Meaning is Wrong", c: "Correct & Clear", d: "Incorrect & Nonsense", correct: "C" },
+  { language: "Bengali", question: "পাখিদের নীর ভেসে যায় আকাশভাঙা নীড়ে।", a: "Correct & Clear", b: "Spelled Right, but Meaning is Wrong", c: "Sounds Right, but Spelled Wrong", d: "Incorrect & Nonsense", correct: "C" },
   { language: "Bengali", question: "অন্যের জন্য অন্ন রান্না করা হলো।", a: "Sounds Right, but Spelled Wrong", b: "Correct & Clear", c: "Spelled Right, but Meaning is Wrong", d: "Incorrect & Nonsense", correct: "B" },
-  { language: "Bengali", question: "এই বিশাল পৃথিবীর বুকে ধরণীর রূপ যেন শেষ হতে চায় না।", a: "Spelled Right, but Meaning is Wrong", b: "Correct & Clear", c: "Sounds Right, but Spelled Wrong", d: "Incorrect & Nonsense", correct: "B" },
+  { language: "Bengali", question: "এই বিশাল পৃথিবীর বুকে ধরণীর রূপ যেন শেষ হতে চায় না।", a: "Spelled Right, but Meaning is Wrong", b: "Correct & Clear", c: "Sounds Right, but Spelled Wrong", d: "Incorrect & Nonsense", correct: "B" },
   { language: "Bengali", question: "নদীর তিরেতে তীর চালানোর প্রশিক্ষণ হচ্ছিল।", a: "Correct & Clear", b: "Incorrect & Nonsense", c: "Spelled Right, but Meaning is Wrong", d: "Sounds Right, but Spelled Wrong", correct: "D" },
-  { language: "Bengali", question: "তার মাথা খুব বড় কিন্তু অংকে তার একদম মাথা নেই।", a: "Sounds Right, but Spelled Wrong", b: "Spelled Right, but Meaning is Wrong", c: "Correct & Clear", d: "Incorrect & Nonsense", correct: "C" },
-  { language: "Bengali", question: "তীরন্দাজিতে লক্ষ্য ভেদের জন্য লক্ষ টাকা পুরস্কার ছিল।", a: "Sounds Right, but Spelled Wrong", b: "Spelled Right, but Meaning is Wrong", c: "Incorrect & Nonsense", d: "Correct & Clear", correct: "D" },
-  { language: "Bengali", question: "সুন্দর প্রভাতে আজ খুব মিষ্টি একটা সকাল।", a: "Sounds Right, but Spelled Wrong", b: "Correct & Clear", c: "Spelled Right, but Meaning is Wrong", d: "Incorrect & Nonsense", correct: "B" },
+  { language: "Bengali", question: "বড় মাথা মানেই যে মাথায় বুদ্ধি বেশি এই ধারণা সবসময় ঠিক নাও হতে পারে।", a: "Sounds Right, but Spelled Wrong", b: "Spelled Right, but Meaning is Wrong", c: "Correct & Clear", d: "Incorrect & Nonsense", correct: "C" },
+  { language: "Bengali", question: "তীরন্দাজিতে লক্ষ্য ভেদের জন্য ১ লক্ষ টাকা পুরস্কার ছিল।", a: "Sounds Right, but Spelled Wrong", b: "Spelled Right, but Meaning is Wrong", c: "Incorrect & Nonsense", d: "Correct & Clear", correct: "D" },
+  { language: "Bengali", question: "টাইগার হিলে প্রভাতের সূর্যোদয়ের দৃশ্য আমার সকালকে স্মরণীয় করে তুললো।", a: "Sounds Right, but Spelled Wrong", b: "Correct & Clear", c: "Spelled Right, but Meaning is Wrong", d: "Incorrect & Nonsense", correct: "B" },
 ];
