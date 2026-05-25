@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Linguistic Research Study</title>
 <script src="questions.js"></script>
+
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
   body {
     font-family: 'Segoe UI', sans-serif;
     background: #f0f4f8;
@@ -16,6 +18,7 @@
     justify-content: center;
     padding: 20px;
   }
+
   .card {
     background: white;
     border-radius: 16px;
@@ -24,14 +27,38 @@
     width: 100%;
     box-shadow: 0 4px 24px rgba(0,0,0,0.1);
   }
+
   .screen { display: none; }
   .screen.active { display: block; }
 
-  h1 { font-size: 1.6rem; color: #1a202c; margin-bottom: 8px; }
-  h2 { font-size: 1.1rem; color: #4a5568; margin-bottom: 20px; font-weight: 400; }
-  p { color: #4a5568; line-height: 1.7; margin-bottom: 14px; }
+  h1 {
+    font-size: 1.6rem;
+    color: #1a202c;
+    margin-bottom: 8px;
+  }
 
-  label { display: block; font-size: 0.9rem; color: #4a5568; margin-bottom: 6px; font-weight: 600; margin-top: 14px; }
+  h2 {
+    font-size: 1.1rem;
+    color: #4a5568;
+    margin-bottom: 20px;
+    font-weight: 400;
+  }
+
+  p {
+    color: #4a5568;
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  label {
+    display: block;
+    font-size: 0.9rem;
+    color: #4a5568;
+    margin-bottom: 6px;
+    font-weight: 600;
+    margin-top: 14px;
+  }
+
   input, select {
     width: 100%;
     padding: 12px 14px;
@@ -41,7 +68,11 @@
     outline: none;
     transition: border-color 0.2s;
   }
-  input:focus, select:focus { border-color: #4f46e5; }
+
+  input:focus,
+  select:focus {
+    border-color: #4f46e5;
+  }
 
   .btn {
     width: 100%;
@@ -56,11 +87,58 @@
     margin-top: 20px;
     transition: background 0.2s;
   }
+
   .btn:hover { background: #4338ca; }
-  .btn.green { background: #059669; }
-  .btn.green:hover { background: #047857; }
+
+  .btn.green {
+    background: #059669;
+  }
+
+  .btn.green:hover {
+    background: #047857;
+  }
+
+  /* proficiency */
+
+  .proficiency-box {
+    margin-top: 10px;
+    margin-bottom: 4px;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    display: none;
+  }
+
+  .proficiency-title {
+    font-size: 0.84rem;
+    color: #4a5568;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .check-group {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.92rem;
+    color: #2d3748;
+  }
+
+  .check-item input {
+    width: auto;
+    transform: scale(1.1);
+    cursor: pointer;
+  }
 
   /* Instructions */
+
   .instruction-box {
     background: #f8fafc;
     border-left: 4px solid #4f46e5;
@@ -68,14 +146,18 @@
     padding: 16px 20px;
     margin-bottom: 16px;
   }
+
   .instruction-box p { margin-bottom: 8px; }
+
   .option-legend { margin: 16px 0; }
+
   .legend-item {
     display: flex;
     align-items: flex-start;
     gap: 12px;
     margin-bottom: 10px;
   }
+
   .legend-badge {
     min-width: 28px;
     height: 28px;
@@ -88,12 +170,36 @@
     justify-content: center;
     font-size: 0.85rem;
   }
-  .legend-text { font-size: 0.9rem; color: #2d3748; line-height: 1.5; padding-top: 4px; }
+
+  .legend-text {
+    font-size: 0.9rem;
+    color: #2d3748;
+    line-height: 1.5;
+    padding-top: 4px;
+  }
 
   /* Progress */
-  .progress-bar { height: 6px; background: #e2e8f0; border-radius: 99px; margin-bottom: 20px; }
-  .progress-fill { height: 100%; background: #4f46e5; border-radius: 99px; transition: width 0.3s ease; }
-  .counter { font-size: 0.85rem; color: #718096; margin-bottom: 8px; }
+
+  .progress-bar {
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 99px;
+    margin-bottom: 20px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: #4f46e5;
+    border-radius: 99px;
+    transition: width 0.3s ease;
+  }
+
+  .counter {
+    font-size: 0.85rem;
+    color: #718096;
+    margin-bottom: 8px;
+  }
+
   .lang-badge {
     display: inline-block;
     background: #eef2ff;
@@ -106,8 +212,16 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
-  .lang-badge.hindi { background: #fff3e0; color: #e65100; }
-  .lang-badge.bengali { background: #e8f5e9; color: #2e7d32; }
+
+  .lang-badge.hindi {
+    background: #fff3e0;
+    color: #e65100;
+  }
+
+  .lang-badge.bengali {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
 
   .question-text {
     font-size: 1.1rem;
@@ -119,7 +233,13 @@
     border-left: 4px solid #4f46e5;
     border-radius: 8px;
   }
-  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
   .option-btn {
     display: flex;
     align-items: center;
@@ -135,18 +255,46 @@
     transition: all 0.15s ease;
     width: 100%;
   }
-  .option-btn:hover { border-color: #4f46e5; background: #f5f3ff; }
-  .option-btn.correct { border-color: #059669; background: #ecfdf5; color: #065f46; pointer-events: none; }
-  .option-btn.wrong { border-color: #dc2626; background: #fef2f2; color: #991b1b; pointer-events: none; }
-  .option-btn.disabled { pointer-events: none; opacity: 0.5; }
+
+  .option-btn:hover {
+    border-color: #4f46e5;
+    background: #f5f3ff;
+  }
+
+  .option-btn.correct {
+    border-color: #059669;
+    background: #ecfdf5;
+    color: #065f46;
+    pointer-events: none;
+  }
+
+  .option-btn.wrong {
+    border-color: #dc2626;
+    background: #fef2f2;
+    color: #991b1b;
+    pointer-events: none;
+  }
+
+  .option-btn.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
   .option-label {
-    min-width: 30px; height: 30px; border-radius: 50%;
-    background: #eef2ff; color: #4f46e5;
-    font-weight: 700; display: flex; align-items: center; justify-content: center;
+    min-width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 0.85rem;
   }
 
   /* Feedback */
+
   .feedback-box {
     margin-top: 16px;
     padding: 14px 16px;
@@ -155,51 +303,106 @@
     font-weight: 600;
     display: none;
   }
-  .feedback-box.correct { background: #ecfdf5; color: #065f46; border: 1.5px solid #059669; }
-  .feedback-box.wrong { background: #fef2f2; color: #991b1b; border: 1.5px solid #dc2626; }
-  .rt-display { font-size: 0.82rem; font-weight: 400; margin-top: 4px; color: #6b7280; }
+
+  .feedback-box.correct {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1.5px solid #059669;
+  }
+
+  .feedback-box.wrong {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1.5px solid #dc2626;
+  }
+
+  .rt-display {
+    font-size: 0.82rem;
+    font-weight: 400;
+    margin-top: 4px;
+    color: #6b7280;
+  }
 
   .next-btn {
-    width: 100%; padding: 13px;
-    background: #4f46e5; color: white;
-    border: none; border-radius: 12px;
-    font-size: 1rem; font-weight: 600;
-    cursor: pointer; margin-top: 14px;
+    width: 100%;
+    padding: 13px;
+    background: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 14px;
     display: none;
     transition: background 0.2s;
   }
-  .next-btn:hover { background: #4338ca; }
+
+  .next-btn:hover {
+    background: #4338ca;
+  }
 
   /* Summary */
+
   .summary-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     margin: 20px 0;
   }
+
   .summary-card {
     background: #f8fafc;
     border-radius: 10px;
     padding: 14px;
     text-align: center;
   }
-  .summary-card .val { font-size: 1.8rem; font-weight: 700; color: #4f46e5; }
-  .summary-card .lbl { font-size: 0.78rem; color: #718096; margin-top: 4px; }
-  .lang-summary { margin-top: 16px; }
-  .lang-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 0; border-bottom: 1px solid #f0f4f8;
-    font-size: 0.9rem; color: #2d3748;
+
+  .summary-card .val {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #4f46e5;
   }
-  .lang-row span { font-weight: 600; color: #4f46e5; }
+
+  .summary-card .lbl {
+    font-size: 0.78rem;
+    color: #718096;
+    margin-top: 4px;
+  }
+
+  .lang-summary {
+    margin-top: 16px;
+  }
+
+  .lang-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f4f8;
+    font-size: 0.9rem;
+    color: #2d3748;
+  }
+
+  .lang-row span {
+    font-weight: 600;
+    color: #4f46e5;
+  }
 </style>
 </head>
+
 <body>
 
-<!-- SCREEN 1: PARTICIPANT INFO -->
+<!-- SCREEN 1 -->
+
 <div class="card screen active" id="infoScreen">
+
   <h1>Linguistic Research Study</h1>
-  <p>Please fill in your details before we begin. All information is confidential and used for research purposes only.</p>
+
+  <p>
+    Please fill in your details before we begin.
+    All information is confidential and used for research purposes only.
+  </p>
 
   <label>Full Name / Participant ID</label>
   <input type="text" id="pid" placeholder="e.g. Bristi Dutta">
@@ -208,6 +411,7 @@
   <input type="number" id="age" placeholder="e.g. 22" min="10" max="100">
 
   <label>Gender</label>
+
   <select id="gender">
     <option value="">-- Select --</option>
     <option>Male</option>
@@ -219,106 +423,249 @@
   <label>Occupation</label>
   <input type="text" id="occupation" placeholder="e.g. Student, Teacher, Engineer">
 
+  <!-- L1 -->
+
   <label>First Language — L1 *</label>
+
   <select id="l1">
     <option value="">-- Select --</option>
-    <option>English</option>
-    <option>Hindi</option>
-    <option>Bengali</option>
-    <option>Other</option>
   </select>
+
+  <div class="proficiency-box" id="l1ProfBox">
+    <div class="proficiency-title">Select proficiency:</div>
+
+    <div class="check-group">
+      <label class="check-item">
+        <input type="checkbox" id="l1_read">
+        Reading
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" id="l1_write">
+        Writing
+      </label>
+    </div>
+  </div>
+
+  <!-- L2 -->
 
   <label>Second Language — L2 *</label>
+
   <select id="l2">
     <option value="">-- Select --</option>
-    <option>English</option>
-    <option>Hindi</option>
-    <option>Bengali</option>
-    <option>Other</option>
   </select>
+
+  <div class="proficiency-box" id="l2ProfBox">
+    <div class="proficiency-title">Select proficiency:</div>
+
+    <div class="check-group">
+      <label class="check-item">
+        <input type="checkbox" id="l2_read">
+        Reading
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" id="l2_write">
+        Writing
+      </label>
+    </div>
+  </div>
+
+  <!-- L3 -->
 
   <label>Third Language — L3 (optional)</label>
+
   <select id="l3">
     <option value="">-- None --</option>
-    <option>English</option>
-    <option>Hindi</option>
-    <option>Bengali</option>
-    <option>Other</option>
   </select>
 
+  <div class="proficiency-box" id="l3ProfBox">
+    <div class="proficiency-title">Select proficiency:</div>
+
+    <div class="check-group">
+      <label class="check-item">
+        <input type="checkbox" id="l3_read">
+        Reading
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" id="l3_write">
+        Writing
+      </label>
+    </div>
+  </div>
+
   <button class="btn" onclick="goToInstructions()">Next →</button>
+
 </div>
 
-<!-- SCREEN 2: INSTRUCTIONS -->
+<!-- SCREEN 2 -->
+
 <div class="card screen" id="instructionScreen">
+
   <h1>📋 Instructions</h1>
 
   <div class="instruction-box">
     <p>You will be shown <strong>30 sentences</strong> — 10 in English, 10 in Hindi, and 10 in Bengali.</p>
-    <p>Each sentence uses a word that may or may not be used correctly. Your job is to classify each sentence using one of the four options below.</p>
-    <p><strong>Answer as quickly and accurately as you can.</strong> Your response time is recorded automatically.</p>
+
+    <p>
+      Each sentence uses a word that may or may not be used correctly.
+      Your job is to classify each sentence using one of the four options below.
+    </p>
+
+    <p>
+      <strong>Answer as quickly and accurately as you can.</strong>
+      Your response time is recorded automatically.
+    </p>
   </div>
 
-  <p style="font-weight:600; color:#1a202c; margin-bottom:10px;">The four options mean:</p>
+  <p style="font-weight:600; color:#1a202c; margin-bottom:10px;">
+    The four options mean:
+  </p>
+
   <div class="option-legend">
+
     <div class="legend-item">
       <div class="legend-badge">A/B/C/D</div>
-      <div class="legend-text"><strong>Correct & Clear</strong> — The sentence is grammatically correct and the word is used properly.</div>
+
+      <div class="legend-text">
+        <strong>Correct & Clear</strong>
+        — The sentence is grammatically correct and the word is used properly.
+      </div>
     </div>
+
     <div class="legend-item">
       <div class="legend-badge">A/B/C/D</div>
-      <div class="legend-text"><strong>Sounds Right, but Spelled Wrong</strong> — The sentence sounds okay when spoken, but a word is misspelled.</div>
+
+      <div class="legend-text">
+        <strong>Sounds Right, but Spelled Wrong</strong>
+        — The sentence sounds okay when spoken, but a word is misspelled.
+      </div>
     </div>
+
     <div class="legend-item">
       <div class="legend-badge">A/B/C/D</div>
-      <div class="legend-text"><strong>Spelled Right, but Meaning is Wrong</strong> — The words are spelled correctly but used in the wrong context (wrong meaning).</div>
+
+      <div class="legend-text">
+        <strong>Spelled Right, but Meaning is Wrong</strong>
+        — The words are spelled correctly but used in the wrong context (wrong meaning).
+      </div>
     </div>
+
     <div class="legend-item">
       <div class="legend-badge">A/B/C/D</div>
-      <div class="legend-text"><strong>Incorrect & Nonsense</strong> — The sentence makes no sense at all.</div>
+
+      <div class="legend-text">
+        <strong>Incorrect & Nonsense</strong>
+        — The sentence makes no sense at all.
+      </div>
     </div>
+
   </div>
 
-  <p style="font-size:0.88rem; color:#718096;">Note: Read all options carefully before answering.</p>
+  <p style="font-size:0.88rem; color:#718096;">
+    Note: Read all options carefully before answering.
+  </p>
 
-  <button class="btn" onclick="startExperiment()">I Understand — Start →</button>
+  <button class="btn" onclick="startExperiment()">
+    I Understand — Start →
+  </button>
+
 </div>
 
-<!-- SCREEN 3: QUESTION -->
+<!-- SCREEN 3 -->
+
 <div class="card screen" id="questionScreen">
-  <div class="counter" id="counter">Question 1 of 30</div>
-  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <div class="counter" id="counter">
+    Question 1 of 30
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+
   <div class="lang-badge" id="langBadge">English</div>
+
   <div class="question-text" id="questionText"></div>
+
   <div class="options" id="optionsContainer"></div>
+
   <div class="feedback-box" id="feedbackBox"></div>
-  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
+
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+    Next Question →
+  </button>
+
 </div>
 
-<!-- SCREEN 4: SUMMARY -->
+<!-- SCREEN 4 -->
+
 <div class="card screen" id="summaryScreen">
+
   <h1>🎉 All Done!</h1>
-  <p>Thank you for completing the study. Here's how you did:</p>
+
+  <p>
+    Thank you for completing the study.
+    Here's how you did:
+  </p>
 
   <div class="summary-grid">
-    <div class="summary-card"><div class="val" id="sumAccuracy">-</div><div class="lbl">Overall Accuracy</div></div>
-    <div class="summary-card"><div class="val" id="sumCorrect">-</div><div class="lbl">Correct out of 30</div></div>
-    <div class="summary-card"><div class="val" id="sumAvgRT">-</div><div class="lbl">Avg Response Time</div></div>
-    <div class="summary-card"><div class="val" id="sumFastest">-</div><div class="lbl">Fastest Answer</div></div>
+
+    <div class="summary-card">
+      <div class="val" id="sumAccuracy">-</div>
+      <div class="lbl">Overall Accuracy</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="val" id="sumCorrect">-</div>
+      <div class="lbl">Correct out of 30</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="val" id="sumAvgRT">-</div>
+      <div class="lbl">Avg Response Time</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="val" id="sumFastest">-</div>
+      <div class="lbl">Fastest Answer</div>
+    </div>
+
   </div>
 
   <div class="lang-summary">
-    <p style="font-weight:600; color:#1a202c; margin-bottom:4px;">By Language:</p>
-    <div class="lang-row">English <span id="engStat">-</span></div>
-    <div class="lang-row">Hindi <span id="hinStat">-</span></div>
-    <div class="lang-row">Bengali <span id="benStat">-</span></div>
+
+    <p style="font-weight:600; color:#1a202c; margin-bottom:4px;">
+      By Language:
+    </p>
+
+    <div class="lang-row">
+      English <span id="engStat">-</span>
+    </div>
+
+    <div class="lang-row">
+      Hindi <span id="hinStat">-</span>
+    </div>
+
+    <div class="lang-row">
+      Bengali <span id="benStat">-</span>
+    </div>
+
   </div>
 
-  <p style="margin-top:20px; font-size:0.88rem; color:#718096;">Please download your results and send the CSV file to the researcher via WhatsApp or email.</p>
-  <button class="btn green" onclick="downloadCSV()">⬇ Download My Results (CSV)</button>
+  <p style="margin-top:20px; font-size:0.88rem; color:#718096;">
+    Please download your results and send the CSV file to the researcher via WhatsApp or email.
+  </p>
+
+  <button class="btn green" onclick="downloadCSV()">
+    ⬇ Download My Results (CSV)
+  </button>
+
 </div>
 
 <script>
+
 let currentIndex = 0;
 let results = [];
 let startTime = 0;
@@ -337,12 +684,17 @@ const l2Select = document.getElementById('l2');
 const l3Select = document.getElementById('l3');
 
 function populateDropdown(selectElement, options, placeholder) {
-  selectElement.innerHTML = `<option value="">${placeholder}</option>`;
+
+  selectElement.innerHTML =
+    `<option value="">${placeholder}</option>`;
 
   options.forEach(lang => {
+
     const option = document.createElement('option');
+
     option.value = lang;
     option.textContent = lang;
+
     selectElement.appendChild(option);
   });
 }
@@ -351,29 +703,56 @@ populateDropdown(l1Select, languageOrder, '-- Select --');
 populateDropdown(l2Select, [], '-- Select --');
 populateDropdown(l3Select, [], '-- None --');
 
+function toggleProfBox(selectEl, boxId) {
+
+  const box = document.getElementById(boxId);
+
+  if (selectEl.value) {
+    box.style.display = 'block';
+
+  } else {
+    box.style.display = 'none';
+  }
+}
+
 l1Select.addEventListener('change', () => {
+
   const l1 = l1Select.value;
 
   l2Select.value = '';
   l3Select.value = '';
 
-  const l2Options = languageOrder.filter(lang => lang !== l1);
+  document.getElementById('l2ProfBox').style.display = 'none';
+  document.getElementById('l3ProfBox').style.display = 'none';
+
+  const l2Options =
+    languageOrder.filter(lang => lang !== l1);
 
   populateDropdown(l2Select, l2Options, '-- Select --');
   populateDropdown(l3Select, [], '-- None --');
+
+  toggleProfBox(l1Select, 'l1ProfBox');
 });
 
 l2Select.addEventListener('change', () => {
+
   const l1 = l1Select.value;
   const l2 = l2Select.value;
 
   l3Select.value = '';
 
-  const l3Options = languageOrder.filter(
-    lang => lang !== l1 && lang !== l2
-  );
+  const l3Options =
+    languageOrder.filter(
+      lang => lang !== l1 && lang !== l2
+    );
 
   populateDropdown(l3Select, l3Options, '-- None --');
+
+  toggleProfBox(l2Select, 'l2ProfBox');
+});
+
+l3Select.addEventListener('change', () => {
+  toggleProfBox(l3Select, 'l3ProfBox');
 });
 
 /* =========================
@@ -381,28 +760,47 @@ l2Select.addEventListener('change', () => {
 ========================= */
 
 function goToInstructions() {
-  const pid = document.getElementById('pid').value.trim();
-  const age = document.getElementById('age').value.trim();
-  const gender = document.getElementById('gender').value;
-  const occupation = document.getElementById('occupation').value.trim();
+
+  const pid =
+    document.getElementById('pid').value.trim();
+
+  const age =
+    document.getElementById('age').value.trim();
+
+  const gender =
+    document.getElementById('gender').value;
+
+  const occupation =
+    document.getElementById('occupation').value.trim();
 
   const l1 = l1Select.value;
   const l2 = l2Select.value;
   const l3 = l3Select.value;
 
   if (!pid || !age || !gender || !occupation || !l1 || !l2) {
+
     alert('Please fill in all required fields.');
     return;
   }
 
   participant = {
+
     id: pid,
     age,
     gender,
     occupation,
+
     l1,
+    l1_reading: document.getElementById('l1_read').checked ? 'Yes' : 'No',
+    l1_writing: document.getElementById('l1_write').checked ? 'Yes' : 'No',
+
     l2,
-    l3: l3 || 'None'
+    l2_reading: document.getElementById('l2_read').checked ? 'Yes' : 'No',
+    l2_writing: document.getElementById('l2_write').checked ? 'Yes' : 'No',
+
+    l3: l3 || 'None',
+    l3_reading: document.getElementById('l3_read').checked ? 'Yes' : 'No',
+    l3_writing: document.getElementById('l3_write').checked ? 'Yes' : 'No'
   };
 
   const selectedLanguages = [l1, l2];
@@ -414,7 +812,10 @@ function goToInstructions() {
   filteredQuestions = [];
 
   selectedLanguages.forEach(lang => {
-    const langQuestions = questions.filter(q => q.language === lang);
+
+    const langQuestions =
+      questions.filter(q => q.language === lang);
+
     filteredQuestions.push(...langQuestions);
   });
 
@@ -422,6 +823,7 @@ function goToInstructions() {
 }
 
 function startExperiment() {
+
   showScreen('questionScreen');
   showQuestion(0);
 }
@@ -431,6 +833,7 @@ function startExperiment() {
 ========================= */
 
 function showQuestion(index) {
+
   answered = false;
 
   const q = filteredQuestions[index];
@@ -443,7 +846,8 @@ function showQuestion(index) {
   document.getElementById('progressFill').style.width =
     `${(index / filteredQuestions.length) * 100}%`;
 
-  const badge = document.getElementById('langBadge');
+  const badge =
+    document.getElementById('langBadge');
 
   badge.textContent = q.language;
   badge.className = 'lang-badge';
@@ -456,13 +860,16 @@ function showQuestion(index) {
     badge.classList.add('bengali');
   }
 
-  document.getElementById('questionText').textContent = q.question;
+  document.getElementById('questionText').textContent =
+    q.question;
 
-  const container = document.getElementById('optionsContainer');
+  const container =
+    document.getElementById('optionsContainer');
 
   container.innerHTML = '';
 
-  ['a', 'b', 'c', 'd'].forEach(key => {
+  ['a','b','c','d'].forEach(key => {
+
     const btn = document.createElement('button');
 
     btn.className = 'option-btn';
@@ -471,13 +878,16 @@ function showQuestion(index) {
     btn.innerHTML =
       `<span class="option-label">${key.toUpperCase()}</span> ${q[key]}`;
 
-    btn.onclick = () => recordAnswer(key.toUpperCase(), q);
+    btn.onclick =
+      () => recordAnswer(key.toUpperCase(), q);
 
     container.appendChild(btn);
   });
 
   document.getElementById('feedbackBox').style.display = 'none';
-  document.getElementById('feedbackBox').className = 'feedback-box';
+
+  document.getElementById('feedbackBox').className =
+    'feedback-box';
 
   document.getElementById('nextBtn').style.display = 'none';
 
@@ -489,36 +899,46 @@ function showQuestion(index) {
 ========================= */
 
 function recordAnswer(chosen, q) {
+
   if (answered) return;
 
   answered = true;
 
-  const rt = ((performance.now() - startTime) / 1000).toFixed(4);
+  const rt =
+    ((performance.now() - startTime) / 1000).toFixed(4);
 
-  const isCorrect = chosen === q.correct;
+  const isCorrect =
+    chosen === q.correct;
 
   ['a','b','c','d'].forEach(key => {
-    const btn = document.getElementById(`opt-${key}`);
+
+    const btn =
+      document.getElementById(`opt-${key}`);
 
     if (key.toUpperCase() === q.correct) {
+
       btn.classList.add('correct');
 
     } else if (
       key.toUpperCase() === chosen &&
       !isCorrect
     ) {
+
       btn.classList.add('wrong');
 
     } else {
+
       btn.classList.add('disabled');
     }
   });
 
-  const fb = document.getElementById('feedbackBox');
+  const fb =
+    document.getElementById('feedbackBox');
 
   fb.style.display = 'block';
 
   if (isCorrect) {
+
     fb.className = 'feedback-box correct';
 
     fb.innerHTML =
@@ -544,16 +964,28 @@ function recordAnswer(chosen, q) {
   document.getElementById('nextBtn').style.display = 'block';
 
   results.push({
+
     participant_id: participant.id,
     age: participant.age,
     gender: participant.gender,
     occupation: participant.occupation,
+
     l1: participant.l1,
+    l1_reading: participant.l1_reading,
+    l1_writing: participant.l1_writing,
+
     l2: participant.l2,
+    l2_reading: participant.l2_reading,
+    l2_writing: participant.l2_writing,
+
     l3: participant.l3,
+    l3_reading: participant.l3_reading,
+    l3_writing: participant.l3_writing,
+
     question_number: currentIndex + 1,
     question_language: q.language,
     question: q.question,
+
     option_chosen: chosen,
     correct_answer: q.correct,
     is_correct: isCorrect,
@@ -646,16 +1078,28 @@ function showSummary() {
 function downloadCSV() {
 
   const headers = [
+
     'participant_id',
     'age',
     'gender',
     'occupation',
+
     'l1',
+    'l1_reading',
+    'l1_writing',
+
     'l2',
+    'l2_reading',
+    'l2_writing',
+
     'l3',
+    'l3_reading',
+    'l3_writing',
+
     'question_number',
     'question_language',
     'question',
+
     'option_chosen',
     'correct_answer',
     'is_correct',
@@ -703,6 +1147,7 @@ function showScreen(id) {
     .getElementById(id)
     .classList.add('active');
 }
+
 </script>
 </body>
 </html>
